@@ -27,8 +27,13 @@ This is a classic Snake game implemented using the `tkinter` library in Python. 
    python snake_game.py
    
 ## Gameplay
-
+<div>
 <p align="center">
-  <img src="https://github.com/WZhengJie99/Snake_game/assets/147889572/58aa9580-b481-42e2-82ed-8976c995b9a9" alt="Snake-Game" width="70%" height="70%">
+  <img src="images/image.png" alt="Snake-Game" width="70%" height="70%">
+</p> <br>
+<p align="center">
+  <img src="images/image2.png" alt="Snake-Game" width="70%" height="70%">
 </p>
+</div>
+
 
