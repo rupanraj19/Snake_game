@@ -1,3 +1,10 @@
+"""
+  Author: rupanraj19
+  Email: rupanraj2002@gmail.com
+
+  Contributor: Wong Zheng Jie
+  Email: wzhengjie99@gmail.com
+"""
 
 from tkinter import *
 import random
@@ -11,7 +18,6 @@ BODY_PARTS = 3
 SNAKE_COLOR = "#00FF00" #GREEN
 FOOD_COLOR = "#FF0000" #RED
 BACKGROUND_COLOR = "#000000" #BLACK
-
 
 class Snake:
     
@@ -38,10 +44,6 @@ class Food:
         # draw the food
         canvas.create_oval(x,y,x+ SPACE_SIZE,y+ SPACE_SIZE, fill=FOOD_COLOR, tag = "food")
 
-
-
-
-
 def next_turn(snake, food):
     
     x,y = snake.coordinates[0]
@@ -63,11 +65,14 @@ def next_turn(snake, food):
 
     if x == food.coordinates[0] and y == food.coordinates[1]:
 
-        global score 
+        global score, high_score
 
         score += 1
 
-        label.config(text = "Score:{}".format(score))
+        if score > high_score:
+            high_score = score
+
+        label.config(text = "Score:{} High Score:{}".format(score, high_score))
         
         canvas.delete("food")
 
@@ -83,10 +88,8 @@ def next_turn(snake, food):
 
     if check_collisions(snake):
         game_over()
-
     else:    
         window.after(SPEED, next_turn, snake, food)
-
 
 def change_direction(new_direction):
     
@@ -110,41 +113,45 @@ def check_collisions(snake):
     x,y = snake.coordinates[0]
 
     if x < 0 or x >= GAME_WIDTH:
-        print("game over")
         return True
     elif y < 0 or y >= GAME_HEIGHT:
-        print("game over")
         return True
     
     for body_parts in snake.coordinates[1:]:
         if x == body_parts[0] and y == body_parts[1]:
-            print("game over")
             return True
-        else:
-            return False
 
+    return False
 
 def game_over():
-    
     canvas.delete(ALL)
-    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=("consolas", 70), text ="GAME OVER", fill="red", tag="game_over")
+    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2 - 40, font=("consolas", 70), text="GAME OVER", fill="red", tag="game_over")
+    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2 + 40, font=("consolas", 30), text="Press R to Restart", fill="white", tag="restart_text")
+    window.bind('r', lambda event: reset_game())
 
-
+def reset_game():
+    global score, direction, snake, food
+    canvas.delete(ALL)
+    score = 0
+    direction = 'down'
+    label.config(text='Score:{} High Score:{}'.format(score, high_score))
+    snake = Snake()
+    food = Food()
+    next_turn(snake, food)
 
 window = Tk()
 window.title("Snake game")
 window.resizable(False,False)
 
 score = 0
+high_score = 0
 direction = 'down'
 
-label = Label(window, text='Score:{}'.format(score), font=('consolas',40))
+label = Label(window, text='Score:{} High Score:{}'.format(score, high_score), font=('consolas',40))
 label.pack()
-
 
 canvas = Canvas(window, bg= BACKGROUND_COLOR, height = GAME_HEIGHT, width = GAME_WIDTH)
 canvas.pack()
-
 
 window.update()
 #TO CENTER THE CANVAS/WINDOW
@@ -163,12 +170,9 @@ window.bind('<Right>', lambda event: change_direction('right'))
 window.bind('<Up>', lambda event: change_direction('up'))
 window.bind('<Down>', lambda event: change_direction('down'))
 
-
-
 snake = Snake()
 food = Food()
 
-next_turn(snake,food)
+next_turn(snake, food)
 
 window.mainloop()
-
